@@ -1,44 +1,143 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Travel Inspiration</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mood-Based Music App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f4;
+      transition: background 0.6s, color 0.6s;
+    }.container {
+  max-width: 550px;
+  margin: 60px auto;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.song {
+  background: #eee;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: left;
+  transition: background-color 0.5s, color 0.5s;
+}
+
+audio {
+  width: 100%;
+  margin-top: 5px;
+}
+
+  </style>
 </head>
-<body>
+<body>  <div class="container">
+    <h1>🎵 Mood-Based Music App</h1><select id="moodSelect">
+  <option value="">-- Select Your Mood --</option>
+  <option value="happy">Happy 😊</option>
+  <option value="sad">Sad 😢</option>
+  <option value="chill">Chill 😌</option>
+  <option value="energetic">Energetic ⚡</option>
+</select>
 
-  <header>
-    <h1>🌍 Travel Inspiration</h1>
-    <p>Explore beautiful places around the world</p>
-  </header>
+<div id="playlist"></div>
 
-  <section class="gallery">
-    <h2>Popular Destinations</h2>
+  </div>  <script>
+    const moodSelect = document.getElementById("moodSelect");
+    const playlist = document.getElementById("playlist");
 
-    <div class="cards">
-      <div class="card">
-        <img src="https://source.unsplash.com/300x200/?paris" alt="Paris">
-        <h3>Paris</h3>
-        <p>The city of love and lights.</p>
-      </div>
+    // Royalty-free sample songs
+    const songs = {
+      happy: [
+        { name: "Happy Beat 1", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+        { name: "Happy Beat 2", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+        { name: "Happy Beat 3", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
+        { name: "Happy Beat 4", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" }
+      ],
+      sad: [
+        { name: "Sad Tune 1", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" },
+        { name: "Sad Tune 2", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3" },
+        { name: "Sad Tune 3", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3" },
+        { name: "Sad Tune 4", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" }
+      ],
+      chill: [
+        { name: "Chill Vibes 1", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3" },
+        { name: "Chill Vibes 2", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" },
+        { name: "Chill Vibes 3", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3" },
+        { name: "Chill Vibes 4", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3" }
+      ],
+      energetic: [
+        { name: "Energy Boost 1", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3" },
+        { name: "Energy Boost 2", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3" },
+        { name: "Energy Boost 3", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" },
+        { name: "Energy Boost 4", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3" }
+      ]
+    };
 
-      <div class="card">
-        <img src="https://source.unsplash.com/300x200/?maldives" alt="Maldives">
-        <h3>Maldives</h3>
-        <p>Crystal clear water and white sand beaches.</p>
-      </div>
+    const themes = {
+      happy: {
+        bg: "linear-gradient(135deg, #FFF3B0, #FFDD57)",
+        card: "#FFF9D6",
+        text: "#333"
+      },
+      sad: {
+        bg: "linear-gradient(135deg, #D6E6F2, #B0C4DE)",
+        card: "#EAF2F8",
+        text: "#2C3E50"
+      },
+      chill: {
+        bg: "linear-gradient(135deg, #E0F7FA, #B2EBF2)",
+        card: "#F1FCFD",
+        text: "#004D40"
+      },
+      energetic: {
+        bg: "linear-gradient(135deg, #FFE0B2, #FFB74D)",
+        card: "#FFF3E0",
+        text: "#4E342E"
+      }
+    };
 
-      <div class="card">
-        <img src="https://source.unsplash.com/300x200/?mountains" alt="Mountains">
-        <h3>Mountains</h3>
-        <p>Peaceful views and fresh air.</p>
-      </div>
-    </div>
-  </section>
+    moodSelect.addEventListener("change", function () {
+      const mood = this.value;
+      playlist.innerHTML = "";
 
-  <footer>
-    <p>© 2025 Travel Inspiration | Designed by Uma</p>
-  </footer>
+      if (mood === "") return;
 
-</body>
+      document.body.style.background = themes[mood].bg;
+      document.body.style.color = themes[mood].text;
+      document.querySelector('.container').style.backgroundColor = themes[mood].card;
+
+      songs[mood].forEach(song => {
+        const div = document.createElement("div");
+        div.className = "song";
+
+        div.innerHTML = `
+          <strong>${song.name}</strong>
+          <audio controls>
+            <source src="${song.src}" type="audio/mpeg">
+            Your browser does not support audio.
+          </audio>
+        `;
+
+        playlist.appendChild(div);
+      });
+    });
+  </script></body>
 </html>
